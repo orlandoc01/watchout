@@ -5,6 +5,12 @@ var gameOptions = {
   nAsteroids: 20,
 };
 
+var axes = {
+  x: d3.scale.linear().domain([0,100]).range([0,gameOptions.width]),
+  y: d3.scale.linear().domain([0,100]).range([0,gameOptions.height])
+};
+
+
 
 
 var svgContainer = d3.select(".board")
@@ -15,8 +21,14 @@ var svgContainer = d3.select(".board")
 var asteroidData = [];
 
 
-svgContainer.append('image')
+var astroid = svgContainer.append('image')
   .attr({"xlink:href": "asteroid.png",
-    "height": "10px",
-    "width": "1em"
+    "height": "100px",
+    "width": "100px"
+    });
+
+var rocket = svgContainer.append('image')
+  .attr({"xlink:href": "rocket.gif",
+    "height": "100px",
+    "width": "100px"
     });
