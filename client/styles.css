@@ -3,9 +3,7 @@
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 .asteroid {
-  xlink-href: 'asteroid.png';
+
   height: 50px;
   width: 50px;
-  top: 10px;
-  left: 20px;
 }
