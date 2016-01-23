@@ -9,27 +9,15 @@ function GameClass() {
 };
 
 
-function Asteroid() {
-
-  GameClass.call(this);
-  this.attributes.x = axes.x(Math.floor(Math.random()*101));
-  this.attributes.y = axes.y(Math.floor(Math.random()*101));
-  this.attributes.height = Math.floor(Math.random()*40 + 10) + 'px';
-  this.attributes.width = this.attributes.height;
-  this.attributes.href = 'rocket.gif';
-  //this.move();
-};
-
-Asteroid.prototype = Object.create(GameClass.prototype);
-Asteroid.prototype.move = function(){
-  //this.cx = //??
-  //this.cy = //??
-  setTimeout(this.move,1000);
-};
 
 
 
 
+// var drag = d3.behavior.drag()
+//   //chain stuff
+//   .on('drag',function(d){
+//     h
+//   })
 
 
 
@@ -38,6 +26,7 @@ var gameOptions = {
   height: 500,
   width: 500,
   nAsteroids: 20,
+  padding: 10,
 };
 
 var axes = {
@@ -53,13 +42,26 @@ var svgContainer = d3.select(".board")
   .attr({'width': gameOptions.height, 'height': gameOptions.width});
 
 
-var asteroidList = _.range(gameOptions.nAsteroids).map( (_) => {return new Asteroid()});
+var makeAsteroids = function(n){
 
-var wtf = svgContainer.selectAll('image').data(asteroidList)
+  return _.range(n).map( function(v) {
+    var obj =  { 
+        id: v,
+        x: Math.ceil(Math.random()*100),
+        y: Math.ceil(Math.random()*100)
+      };
+    return obj;
+  });
+};
+
+
+var Asteroids = svgContainer.selectAll('image').data(makeAsteroids(gameOptions.nAsteroids))
             .enter()
             .append('image')
-            .attr('class', 'asteroid');
-
+            .attr('class', 'asteroid')
+            .attr('x', (ast) => axes.x(ast.x))
+            .attr('y', (ast) => axes.y(ast.y))
+            .attr("xlink:href", "asteroid.png");
 
 
 
