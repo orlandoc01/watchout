@@ -1,27 +1,4 @@
-function GameClass() {
-  this.attributes = {};
-  this.attributes.x;
-  this.attributes.y; 
-  this.attributes.height; 
-  this.attributes.width;
-  this.angle = 0;
-  this.velocity = 0;
-};
 
-
-
-
-
-
-// var drag = d3.behavior.drag()
-//   //chain stuff
-//   .on('drag',function(d){
-//     h
-//   })
-
-
-
-// start slingin' some d3 here.
 var gameOptions = {
   height: 500,
   width: 500,
@@ -34,7 +11,28 @@ var axes = {
   y: d3.scale.linear().domain([0,100]).range([0,gameOptions.height])
 };
 
+var Player = function() {
+  var playObj = {};
+  playObj.x = axes.x(0);
+  playObj.y = axes.y(0);
+  playObj.angle = 0;
+  playObj.velocity = 0;
+  return playObj;
+};
 
+
+var drag = d3.behavior.drag()
+  //chain stuff
+  .on('drag',function(d, i){
+    d.x += d3.event.dx;
+    d.y += d3.event.dy;
+    d3.select(this)
+    .attr('x', d.x)
+    .attr('y', d.y);
+    // attr("transform", function(d,i) {
+    //   return "translate(" + [d.x, d.y] + ")";
+    // });
+  });
 
 
 var svgContainer = d3.select(".board")
@@ -56,7 +54,7 @@ var makeAsteroids = function(n){
 
 
 var Asteroids = function(){
-  var asteroidResults = makeAsteroids(20);
+  var asteroidResults = makeAsteroids(gameOptions.nAsteroids);
   var asteroidMapping = svgContainer.selectAll('image.asteroid')
                         .data(asteroidResults);
   
@@ -82,17 +80,33 @@ var Asteroids = function(){
     .attr("class", "asteroid");
   
 
-
-
-  setTimeout(Asteroids, 1000);
+    setTimeout(Asteroids, 1000);
 };
 
 Asteroids();
+var rocketInstance = Player();
+var rocket = svgContainer.selectAll('image.rocket')
+  .data([rocketInstance])
+  .enter()
+  .append("image")
+  .attr('class', 'rocket')
+  .attr("xlink:href", "rocket.gif")
+  .attr("height", "150px")
+  .attr("width", "100px")
+  .attr("x", function(d) {
+    return d.x ;
+  })
+  .attr("y", function(d) {
+    return d.y;
+  })
+  .attr("transform", "translate(" + axes.x(50) + "," + axes.y(50) + ")")
+  .call(drag);
 
-var rocket = svgContainer.append('image')
-  .attr({"xlink:href": "rocket.gif",
-    "height": "100px",
-    "width": "100px",
-    "x": axes.x(50),
-    "y": axes.y(50),
-    });
+var checkFunc = function(){
+  var asteroids = svgContainer.selectAll('image.asteroid')
+    .attr('x');
+  console.log(asteroids);
+};
+
+//setInterval(checkFunc, 5);
+
