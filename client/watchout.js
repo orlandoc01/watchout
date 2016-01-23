@@ -16,7 +16,7 @@ function Asteroid() {
   this.attributes.y = axes.y(Math.floor(Math.random()*101));
   this.attributes.height = Math.floor(Math.random()*40 + 10) + 'px';
   this.attributes.width = this.attributes.height;
-  this.attributes.href = 'asteroid.png';
+  this.attributes.href = 'rocket.gif';
   //this.move();
 };
 
@@ -57,13 +57,8 @@ var asteroidList = _.range(gameOptions.nAsteroids).map( (_) => {return new Aster
 
 var wtf = svgContainer.selectAll('image').data(asteroidList)
             .enter()
-            .append( function(d) {
-              var image = document.createElement("IMAGE");
-              _.each(d.attributes, function(value, key) {
-                image.setAttribute(key, value);
-              });
-              return image;
-            });
+            .append('image')
+            .attr('class', 'asteroid');
 
 
 
