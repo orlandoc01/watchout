@@ -55,16 +55,39 @@ var makeAsteroids = function(n){
 };
 
 
-var Asteroids = svgContainer.selectAll('image').data(makeAsteroids(gameOptions.nAsteroids))
-            .enter()
-            .append('image')
-            .attr('class', 'asteroid')
-            .attr('x', (ast) => axes.x(ast.x))
-            .attr('y', (ast) => axes.y(ast.y))
-            .attr("xlink:href", "asteroid.png");
+var Asteroids = function(){
+  var asteroidResults = makeAsteroids(20);
+  var asteroidMapping = svgContainer.selectAll('image.asteroid')
+                        .data(asteroidResults);
+  
+  //update Asteroid Positions
+  asteroidMapping.transition()
+    .duration(1000)
+    .attr('x', (ast) => axes.x(ast.x))
+    .attr('y', (ast) => axes.y(ast.y));
+      // .tween('custom', function(t){
+      //   var asteroid = d3.select(this);
+      //   var startX = asteroid.attr('x');
+      //   var startY = asteroid.attr('y');
+      //   asteroid.attr('x')
+      // });
+
+  //Create new using enter()
+  asteroidMapping.enter()
+    .append('image')
+    .attr('class', 'asteroid')
+    .attr('x', (ast) => axes.x(ast.x))
+    .attr('y', (ast) => axes.y(ast.y))
+    .attr("xlink:href", "asteroid.png")
+    .attr("class", "asteroid");
+  
 
 
 
+  setTimeout(Asteroids, 1000);
+};
+
+Asteroids();
 
 var rocket = svgContainer.append('image')
   .attr({"xlink:href": "rocket.gif",
