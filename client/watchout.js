@@ -1,8 +1,8 @@
 
 var gameOptions = {
   height: 500,
-  width: 500,
-  nAsteroids: 20,
+  width: 750,
+  nAsteroids: 10,
   padding: 10,
 };
 
@@ -44,7 +44,7 @@ var drag = d3.behavior.drag()
 
 var svgContainer = d3.select(".board")
   .append('svg')
-  .attr({'width': gameOptions.height, 'height': gameOptions.width});
+  .attr({'width': gameOptions.width, 'height': gameOptions.height});
 
 var asteroidList = [];
 
@@ -53,8 +53,10 @@ var makeAsteroids = function(n){
   asteroidList =  _.range(n).map( function(v) {
     var obj =  { 
         id: v,
-        x: axes.x(Math.ceil(Math.random()*100)),
-        y: axes.y(Math.ceil(Math.random()*100))
+        x: axes.x(Math.ceil(Math.random()*90)),
+        y: axes.y(Math.ceil(Math.random()*90)),
+        height: 50,
+        width: 50
       };
     return obj;
   });
@@ -70,8 +72,22 @@ var Asteroids = function(){
   //update Asteroid Positions
   asteroidMapping.transition()
     .duration(1000)
-    .attr('x', (ast) => ast.x)
-    .attr('y', (ast) => ast.y);
+    .attr('x', (ast) => ast.x - ast.width/2)
+    .attr('y', (ast) => ast.y - ast.height/2)
+    .tween('custom', function(d) {
+      var asteroid = d3.select(this);
+      var Dist = Math.pow((rocketInstance.x - d.x),2) + Math.pow((rocketInstance.y - d.y),2);
+      var startx = d3.select(this).attr('x');
+      var starty = d3.select(this).attr('y');
+      var endx = d.x;
+      var endy = d.y;
+      return function(t) {
+        var x = parseFloat(startx + (endx - startx)*t);
+        var y = parseFloat(starty + (endy - starty)*t);
+        asteroid.attr('x', x);
+        asteroid.attr('y', y);
+      };
+    });
       // .tween('custom', function(t){
       //   var asteroid = d3.select(this);
       //   var startX = asteroid.attr('x');
@@ -83,13 +99,13 @@ var Asteroids = function(){
   asteroidMapping.enter()
     .append('image')
     .attr('class', 'asteroid')
-    .attr('x', (ast) => ast.x)
-    .attr('y', (ast) => ast.y)
+    .attr('x', (ast) => ast.x - ast.width/2)
+    .attr('y', (ast) => ast.y - ast.height/2)
     .attr("xlink:href", "asteroid.png")
     .attr("class", "asteroid");
   
 
-    //setTimeout(Asteroids, 1000);
+    setTimeout(Asteroids, 1000);
 };
 
 Asteroids();
@@ -114,24 +130,24 @@ var rocket = svgContainer.selectAll('image.rocket')
   })
   .call(drag);
 
-var checkFunc = function(){
-  var squareDistance = 0;
-  var closestAsteroid = asteroidList.reduce( function(prevA, A) {
-    DistPrev = Math.pow((rocketInstance.x - prevA.x),2) + Math.pow((rocketInstance.y - prevA.y),2);
-    DistA = Math.pow((rocketInstance.x - A.x),2) + Math.pow((rocketInstance.y - A.y),2);
-    if(DistA < DistPrev) {
-      squareDistance = DistA;
-      return A; 
-    } else {
-      squareDistance = DistPrev;
-      return prevA;
-    } 
-  });
-
-  console.log("Closest Asteroid is has x = " + closestAsteroid.x + " and y = " + closestAsteroid.y);
-  console.log("Square is " + squareDistance);
+// var checkFunc = function(){
+//   var squareDistance = 0;
+//   var closestAsteroid = asteroidList.reduce( function(prevA, A) {
+//     DistPrev = Math.pow((rocketInstance.x - prevA.x),2) + Math.pow((rocketInstance.y - prevA.y),2);
+//     DistA = Math.pow((rocketInstance.x - A.x),2) + Math.pow((rocketInstance.y - A.y),2);
+//     if(DistA < DistPrev) {
+//       squareDistance = DistA;
+//       return A; 
+//     } else {
+//       squareDistance = DistPrev;
+//       return prevA;
+//     } 
+//   });
+//   if(squareDistance < (closestAsteroid.height) * (closestAsteroid.height)) {
+//     console.log("there's been a collision");
+//   }
   
-};
+// };
 
-setInterval(checkFunc, 5000);
+// setInterval(checkFunc, 1);
 
