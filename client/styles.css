@@ -7,3 +7,9 @@ Feel free to use it if you like. */
   height: 50px;
   width: 50px;
 }
+
+.board {
+  background-image: url('background.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
