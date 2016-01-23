@@ -6,6 +6,13 @@ var gameOptions = {
   padding: 10,
 };
 
+var gameStats = {
+  currentScore: 0,
+  highScore: 0,
+  collisions: 0
+};
+
+
 var axes = {
   x: d3.scale.linear().domain([0,100]).range([0,gameOptions.width]),
   y: d3.scale.linear().domain([0,100]).range([0,gameOptions.height])
@@ -82,6 +89,10 @@ var Asteroids = function(){
       var endy = d.y;
       var asteroidHeight = d.height;
       return function(t) {
+        gameStats.currentScore++;
+        d3.select('.current span').text(gameStats.currentScore);
+
+
         var x = parseFloat(startx + (endx - startx)*t);
         var y = parseFloat(starty + (endy - starty)*t);
         var distance = Math.sqrt(Math.pow((rocketInstance.x - x),2) + Math.pow((rocketInstance.y - y),2));
@@ -113,6 +124,8 @@ var Asteroids = function(){
 };
 
 Asteroids();
+
+
 var rocketInstance = Player();
 var rocket = svgContainer.selectAll('image.rocket')
   .data([rocketInstance])
@@ -134,24 +147,4 @@ var rocket = svgContainer.selectAll('image.rocket')
   })
   .call(drag);
 
-// var checkFunc = function(){
-//   var squareDistance = 0;
-//   var closestAsteroid = asteroidList.reduce( function(prevA, A) {
-//     DistPrev = Math.pow((rocketInstance.x - prevA.x),2) + Math.pow((rocketInstance.y - prevA.y),2);
-//     DistA = Math.pow((rocketInstance.x - A.x),2) + Math.pow((rocketInstance.y - A.y),2);
-//     if(DistA < DistPrev) {
-//       squareDistance = DistA;
-//       return A; 
-//     } else {
-//       squareDistance = DistPrev;
-//       return prevA;
-//     } 
-//   });
-//   if(squareDistance < (closestAsteroid.height) * (closestAsteroid.height)) {
-//     console.log("there's been a collision");
-//   }
-  
-// };
-
-// setInterval(checkFunc, 1);
 
