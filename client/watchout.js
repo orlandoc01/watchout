@@ -2,7 +2,7 @@
 var gameOptions = {
   height: 500,
   width: 750,
-  nAsteroids: 1,
+  nAsteroids: 5,
   padding: 10,
 };
 
@@ -88,15 +88,23 @@ var Asteroids = function(){
       var endx = d.x;
       var endy = d.y;
       var asteroidHeight = d.height;
+      var alreadyCollided = false;
       return function(t) {
+
         gameStats.currentScore++;
         d3.select('.current span').text(gameStats.currentScore);
-
-
+        if(gameStats.highScore < gameStats.currentScore) {
+          gameStats.highScore = gameStats.currentScore;
+          d3.select('.highscore span').text(gameStats.highScore);
+        }
         var x = parseFloat(startx + (endx - startx)*t);
         var y = parseFloat(starty + (endy - starty)*t);
         var distance = Math.sqrt(Math.pow((rocketInstance.x - x),2) + Math.pow((rocketInstance.y - y),2));
-        if (distance < asteroidHeight){
+        if (distance < asteroidHeight && !alreadyCollided){
+          gameStats.collisions++;
+          gameStats.currentScore = 0;
+          d3.select('.collisions span').text(gameStats.collisions);
+          alreadyCollided = true;
           console.log("There's been a collision: Do a Barrel Roll!");
         }
         asteroid.attr('x', x);
