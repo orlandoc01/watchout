@@ -13,20 +13,32 @@ var gameStats = {
 };
 
 
-var axes = {
-  x: d3.scale.linear().domain([0,100]).range([0,gameOptions.width]),
-  y: d3.scale.linear().domain([0,100]).range([0,gameOptions.height])
-};
 
 var Player = function() {
   var playObj = {};
   playObj.height = 150;
   playObj.width  = 100;
-  playObj.x = axes.x(50);
-  playObj.y = axes.y(50);
+  playObj.x = 0.5 * gameOptions.width;
+  playObj.y = 0.5 * gameOptions.height;
   playObj.angle = 0;
   playObj.velocity = 0;
   return playObj;
+};
+
+
+var makeAsteroids = function(n){
+
+  asteroidList =  _.range(n).map( function(v) {
+    var obj =  { 
+        id: v,
+        x: (Math.ceil(Math.random()*gameOptions.width*0.9)),
+        y: (Math.ceil(Math.random()*gameOptions.height*0.9)),
+        height: 50,
+        width: 50
+      };
+    return obj;
+  });
+  return asteroidList;
 };
 
 
@@ -38,13 +50,14 @@ var drag = d3.behavior.drag()
     }
     if (d.y + d3.event.dy < gameOptions.width - gameOptions.padding && d.y + d3.event.dy > gameOptions.padding){
       d.y += d3.event.dy;
-    } 
-    d3.select(this)
+    }
+    diffx = d.x - 0.5*gameOptions.width;
+    diffy = d.y - 0.5*gameOptions.height;
+    var degrees = parseInt(((Math.atan(diffy/diffy) || 0) + Math.PI/2)*(180/Math.PI)); 
+    d3.select(this)      
     .attr('x', d.x - d.width/2)
-    .attr('y', d.y - d.height/2);
-    // attr("transform", function(d,i) {
-    //   return "translate(" + [d.x, d.y] + ")";
-    // });
+    .attr('y', d.y - d.height/2)
+    .attr('transform', 'rotate(' + degrees + ')'); 
   });
 
 
@@ -55,20 +68,7 @@ var svgContainer = d3.select(".board")
 
 var asteroidList = [];
 
-var makeAsteroids = function(n){
 
-  asteroidList =  _.range(n).map( function(v) {
-    var obj =  { 
-        id: v,
-        x: axes.x(Math.ceil(Math.random()*90)),
-        y: axes.y(Math.ceil(Math.random()*90)),
-        height: 50,
-        width: 50
-      };
-    return obj;
-  });
-  return asteroidList;
-};
 
 
 var Asteroids = function(){
@@ -111,12 +111,6 @@ var Asteroids = function(){
         asteroid.attr('y', y);
       };
     });
-      // .tween('custom', function(t){
-      //   var asteroid = d3.select(this);
-      //   var startX = asteroid.attr('x');
-      //   var startY = asteroid.attr('y');
-      //   asteroid.attr('x')
-      // });
 
   //Create new using enter()
   asteroidMapping.enter()

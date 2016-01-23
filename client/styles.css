@@ -6,10 +6,22 @@ Feel free to use it if you like. */
 
   height: 50px;
   width: 50px;
+  animation: rotate 1s linear infinite;
+  transform-origin:50% 50%;
 }
 
 .board {
   background-image: url('background.jpg');
   background-repeat: no-repeat;
   background-size: 100%;
+}
+
+body {
+  background-color: 'black';
+  color: 'white';
+}
+
+@keyframes rotate {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
 }
