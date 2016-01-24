@@ -51,13 +51,13 @@ var drag = d3.behavior.drag()
     if (d.y + d3.event.dy < gameOptions.width - gameOptions.padding && d.y + d3.event.dy > gameOptions.padding){
       d.y += d3.event.dy;
     }
-    diffx = d.x - 0.5*gameOptions.width;
-    diffy = d.y - 0.5*gameOptions.height;
-    var degrees = parseInt(((Math.atan(diffy/diffy) || 0) + Math.PI/2)*(180/Math.PI)); 
+    
+    var degrees = parseInt(((Math.atan(d3.event.dy/d3.event.dx) || 0) + Math.PI/2)*(180/Math.PI)); 
     d3.select(this)      
     .attr('x', d.x - d.width/2)
     .attr('y', d.y - d.height/2)
-    .attr('transform', 'rotate(' + degrees + ')'); 
+    //.attr("transform-origin", d.x - d.width/2 + " " + (d.y - d.height/2))
+    //.attr('transform', 'rotate(' + degrees + ')'); 
   });
 
 
@@ -146,7 +146,10 @@ var rocket = svgContainer.selectAll('image.rocket')
   })
   .attr("y", function(d) {
     return d.y - d.height/2;
-  })
+  });
+
+rocket = d3.select('image.rocket')
+  .data([rocketInstance])
   .call(drag);
 
 

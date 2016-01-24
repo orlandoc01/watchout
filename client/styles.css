@@ -10,16 +10,21 @@ Feel free to use it if you like. */
   transform-origin:50% 50%;
 }
 
-.board {
+.board > svg {
   background-image: url('background.jpg');
   background-repeat: no-repeat;
   background-size: 100%;
+}
+
+.rocket {
+  transform-origin: 50% 50%;
 }
 
 body {
   background-color: 'black';
   color: 'white';
 }
+
 
 @keyframes rotate {
   from {transform:rotate(0deg);}
